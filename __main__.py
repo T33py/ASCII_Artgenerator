@@ -10,12 +10,14 @@ def main():
     letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9']
     # ws = generate_weightings(letters)
     # greyscale_to_char = map_to_greyscale(letters, ws)
-    greyscale_to_char = read_letter_ranking("C:/Users/Thorb/source/repos/ASCIIArtGeneratorV3/assets/letters.ranked")
-    greyscaled_image = convert_to_greyscale("C:/Users/Thorb/source/repos/ASCIIArtGeneratorV3/assets/calibration3.jpg")
+    dirname = os.path.dirname(__file__)
+    filename = os.path.join(dirname, 'assets\\letters.ranked')
+    greyscale_to_char = read_letter_ranking(filename)
+    filename = os.path.join(dirname, 'assets\\calibration3.jpg')
+    greyscaled_image = convert_to_greyscale(filename)
     ascii_art = map_to_ascii(greyscaled_image, greyscale_to_char)
     # print_image_representation(greyscaled_image)
     print("printing image to tst out")
-    dirname = os.path.dirname(__file__)
     filename = os.path.join(dirname, 'out\\tst.txt')
     print_to_file(filename, ascii_art)
     
