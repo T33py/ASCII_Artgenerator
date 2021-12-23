@@ -2,9 +2,9 @@ import os
 import sys
 import logging
 from utility.arg_reader import read_args
-from image_representation_printer import print_image_representation, print_to_file
+from image_representation_printer import print_to_file
 from greyscale_image import convert_to_greyscale
-from utility.font_profiler import generate_weightings, map_to_greyscale, read_profile, read_letter_ranking
+from utility.font_profiler import read_letter_ranking
 from ascii_mapper import map_to_ascii
 
 def main():
@@ -42,6 +42,7 @@ def main():
         logging.error(f'Image: {filename} not found')
         return 3
     
+    print(f"converting {filename} to greyscale")
     greyscaled_image = convert_to_greyscale(filename)
     
     # computation
@@ -52,7 +53,12 @@ def main():
     if f_out == "":
         f_out = 'default.txt'
         print(f'No output file specified - printing to {f_out}')
-    filename = os.path.join(dirname, f'out\\{f_out}')
+    
+    outdir = os.path.join(dirname, 'out')
+    if not os.path.isdir(outdir):
+        os.mkdir(outdir)
+
+    filename = os.path.join(outdir, f'out\\{f_out}')
     print(f'printing image to {filename}')
     print_to_file(filename, ascii_art)
     

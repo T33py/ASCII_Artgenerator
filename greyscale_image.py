@@ -4,7 +4,6 @@ tst = "C:/Users/Thorb/source/repos/ASCIIArtGeneratorV3/assets/rgb_tst.jpg"
 
 # Create an array containing the greyscale value of the image pixels
 def convert_to_greyscale(img: str):
-    print(f"converting {img} to greyscale")
     gs_img = []
     im = Image.open(img)
     # print(im.size)
