@@ -96,7 +96,7 @@ def read_letter_ranking(file: str):
     for letter in ranking:
         if letter != "":
             letter.strip()
-            formatted_ranking.append(letter)
+            formatted_ranking.append(letter[0])
     formatted_ranking.append(' ')
 
     # print(formatted_ranking)
