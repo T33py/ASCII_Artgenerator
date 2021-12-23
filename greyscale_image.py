@@ -7,7 +7,7 @@ def convert_to_greyscale(img: str):
     print(f"converting {img} to greyscale")
     gs_img = []
     im = Image.open(img)
-    print(im.size)
+    # print(im.size)
     width = im.size[0]
     height = im.size[1]
 

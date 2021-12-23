@@ -1,24 +1,59 @@
 import os
+import sys
+import logging
+from utility.arg_reader import read_args
 from image_representation_printer import print_image_representation, print_to_file
 from greyscale_image import convert_to_greyscale
 from utility.font_profiler import generate_weightings, map_to_greyscale, read_profile, read_letter_ranking
 from ascii_mapper import map_to_ascii
 
 def main():
-    print("starting")
-    
-    letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9']
-    # ws = generate_weightings(letters)
-    # greyscale_to_char = map_to_greyscale(letters, ws)
+    # read args
+    f_in = ''
+    f_out = ''
+    try:
+        (uf_in, uf_out) = read_args(sys.argv)
+        
+        if uf_in != "":
+            f_in = uf_in
+
+        if uf_out != "":
+            f_out = uf_out
+            
+    except ValueError as e:
+        logging.error(f"Invalid argument assignment: {e}")
+        return 1
+    except Exception as e:
+        logging.error(f"failed to read arguments: {e}")
+        return 2
+
+
+    # setup
     dirname = os.path.dirname(__file__)
-    filename = os.path.join(dirname, 'assets\\letters.ranked')
+    filename = os.path.join(dirname, f'assets\\letters.ranked')
     greyscale_to_char = read_letter_ranking(filename)
-    filename = os.path.join(dirname, 'assets\\ur.jpg')
+    
+    # user input
+    if f_in == "":
+        raise ValueError("No image specified. Use -i to specify an image to convert")
+    filename = os.path.join(dirname, f'assets\\{f_in}')
+
+    if not os.path.isfile(filename):
+        logging.error(f'Image: {filename} not found')
+        return 3
+    
     greyscaled_image = convert_to_greyscale(filename)
+    
+    # computation
+    print("Converting to ascii")
     ascii_art = map_to_ascii(greyscaled_image, greyscale_to_char)
-    # print_image_representation(greyscaled_image)
-    print("printing image to tst out")
-    filename = os.path.join(dirname, 'out\\tst.txt')
+
+    # user output
+    if f_out == "":
+        f_out = 'default.txt'
+        print(f'No output file specified - printing to {f_out}')
+    filename = os.path.join(dirname, f'out\\{f_out}')
+    print(f'printing image to {filename}')
     print_to_file(filename, ascii_art)
     
     print("done")

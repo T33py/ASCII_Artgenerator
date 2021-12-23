@@ -124,7 +124,7 @@ def read_letter_ranking(file: str):
     for letter_index in range(color_gradiant):
         scale_mapping[letter_index] = choose_class[letter_index]
 
-    print(scale_mapping)
+    # print(scale_mapping)
     return scale_mapping
 
 
