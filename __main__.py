@@ -13,7 +13,7 @@ def main():
     dirname = os.path.dirname(__file__)
     filename = os.path.join(dirname, 'assets\\letters.ranked')
     greyscale_to_char = read_letter_ranking(filename)
-    filename = os.path.join(dirname, 'assets\\calibration3.jpg')
+    filename = os.path.join(dirname, 'assets\\ur.jpg')
     greyscaled_image = convert_to_greyscale(filename)
     ascii_art = map_to_ascii(greyscaled_image, greyscale_to_char)
     # print_image_representation(greyscaled_image)

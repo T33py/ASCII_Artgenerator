@@ -10,4 +10,4 @@ def print_to_file(file: str, image: list):
     for row in image:
         for pixel in row:
             f.write(str(pixel))
-        f.write("\n")
+        f.write("\n2")

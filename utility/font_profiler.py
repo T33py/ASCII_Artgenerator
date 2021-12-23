@@ -1,9 +1,11 @@
+from random import randint
 from image_representation_printer import print_to_file
 import os
 import ast
 from greyscale_image import convert_to_greyscale
 
-default_folder = "C:\\Users\\Thorb\\source\\repos\\ASCIIArtGeneratorV3"
+default_folder = "C:\\Users\\Thorb\\source\\repos\\ASCIIArtGeneratorV3\\"
+color_gradiant = 256
 
 # uses images of the letters in the font marked as the character contained to generate weights of letters for the ascii art generation
 # currently checks for [A-Za-z0-9].png in assets
@@ -99,44 +101,42 @@ def read_letter_ranking(file: str):
 
     # print(formatted_ranking)
     scale_mapping = {}
-    interval = 256 // len(formatted_ranking)
+    interval = color_gradiant // len(formatted_ranking)
+    remainder = color_gradiant % interval
+    remainder_used = False
     choose_class = []
-    idx = 0
+    letter_index = 0
     count = 0
-    for val in range(256):
-        choose_class.append(formatted_ranking[idx])
+    for val in range(color_gradiant):
+        choose_class.append(formatted_ranking[letter_index])
         count += 1
-        if count == interval:
-            count = 0
-            if idx + 1 < len(formatted_ranking):
-                idx += 1
+        # when we have the correct part of the gradient matched to this letter -> got to the next letter if we have one
+        if count >= interval:
+            # randomly fill with letters to fill out the remaining values left over after the naiive mapping based on interval
+            if remainder > 0 and randint(0,1) > 0 and not remainder_used:
+                remainder -= 1
+                remainder_used = True
+            elif letter_index + 1 < len(formatted_ranking):
+                count = 0
+                letter_index += 1
+                remainder_used = False
     
-    for idx in range(256):
-        scale_mapping[idx] = choose_class[idx]
+    for letter_index in range(color_gradiant):
+        scale_mapping[letter_index] = choose_class[letter_index]
 
     print(scale_mapping)
     return scale_mapping
 
 
 def tst():
-    letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9']
     print(f"default folder: {default_folder}")
+    letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9']
+    filename = os.path.join(default_folder, 'assets\\letters.ranked')
     print("generating weights")
-    ws = generate_weightings(letters)
-    print(str(ws))
-    print("generate greyscale")
-    gs = map_to_greyscale(letters, ws)
-    print(str(gs))
-    print("output greyscale")
-    # filename = f'{default_folder}\\out\\tst_w.txt'
-    # if os.path.exists(filename):
-    #     f = open(filename, "w")
-    # else:
-    #     f = open(filename, "x")
-    # f.write(str(gs))
-
+    gs = read_letter_ranking(filename)
+    
     letters_ranked = ""
-    for key in gs.keys():
+    for key in gs:
         for letter in gs[key]:
             if not letter in letters_ranked:
                 letters_ranked = letters_ranked + letter
