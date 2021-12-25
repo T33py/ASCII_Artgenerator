@@ -21,8 +21,7 @@ The font_profiler.py file contains functions from my iteration of creaing a syst
 - map_to_greyscale: This function maps the letters profiled to a greyscale dictionary. I used a print of this for the initial version of the letters.ranked file which is used to generate the actual greyscale used in the images.
 - read_letter_ranking: This function reads a file containing letters ordered according to their percieved greyscale tone and sepperated by newline characters. The letters contained will be mapped to each of the values in the greyscale gradient.
 
-TODO:
- - Parametize better
- - Comment better
+# TODO:
+ - Machinelearning!
  - ??
  - Profit
