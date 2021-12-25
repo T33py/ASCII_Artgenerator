@@ -8,7 +8,8 @@ dev_test_folder = "C:\\Users\\Thorb\\source\\repos\\ASCIIArtGeneratorV3\\"
 color_gradiant = 256
 
 # uses images of the letters in the font marked as the character contained to generate weights of letters for the ascii art generation
-# currently checks for [A-Za-z0-9].png in assets
+# checks for <letter>.png in the assets folder where letter is each of the letters in the provided list.
+# files containing lowercase letters are marked by an underscore behind the letter <letter>_.png (windows filesystem is case insensitive)
 def generate_weightings(letters: list):
     weightings = { " ": 255 }
     for letter in letters:
@@ -103,7 +104,6 @@ def read_letter_ranking(file: str):
             formatted_ranking.append(letter[0])
     formatted_ranking.append(' ')
 
-    # print(formatted_ranking)
     scale_mapping = {}
     interval = color_gradiant // len(formatted_ranking)
     remainder = color_gradiant % interval
@@ -128,7 +128,6 @@ def read_letter_ranking(file: str):
     for letter_index in range(color_gradiant):
         scale_mapping[letter_index] = choose_class[letter_index]
 
-    # print(scale_mapping)
     return scale_mapping
 
 
