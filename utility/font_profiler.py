@@ -4,7 +4,7 @@ import os
 import ast
 from greyscale_image import convert_to_greyscale
 
-default_folder = "C:\\Users\\Thorb\\source\\repos\\ASCIIArtGeneratorV3\\"
+dev_test_folder = "C:\\Users\\Thorb\\source\\repos\\ASCIIArtGeneratorV3\\"
 color_gradiant = 256
 
 # uses images of the letters in the font marked as the character contained to generate weights of letters for the ascii art generation
@@ -12,9 +12,9 @@ color_gradiant = 256
 def generate_weightings(letters: list):
     weightings = { " ": 255 }
     for letter in letters:
-        filename = f'{default_folder}\\assets\\{letter}.png'
+        filename = f'{dev_test_folder}\\assets\\{letter}.png'
         if letter.islower():
-            f'{default_folder}\\assets\\{letter}_.png'
+            f'{dev_test_folder}\\assets\\{letter}_.png'
         if os.path.exists(filename):
             gw = calculate_colour_weight(filename)
             # even if lowercase letters use the same ammount of black pixels they are generally percieved as less dense
@@ -42,7 +42,8 @@ def calculate_colour_weight(image: str):
     greyscale_weight = greyscale_weight // pixelcount
     return greyscale_weight
 
-
+# Takes a list of letters and a dictionary containing a greyscale mapping for each.
+# The letters are mapped into a dicitonary containing a list of letters indexed by the greyscale value.
 def map_to_greyscale(letters: list, values: dict):
     scale_mapping = {}
     letterclasses = {}
@@ -63,11 +64,11 @@ def map_to_greyscale(letters: list, values: dict):
     for key in letterclasses.keys():
         keys.append(key)
 
-    interval = 256 // len(letterclasses)
+    interval = color_gradiant // len(letterclasses)
     choose_class = []
     idx = 0
     count = 0
-    for val in range(256):
+    for val in range(color_gradiant):
         choose_class.append(keys[idx])
         count += 1
         if count > interval:
@@ -75,22 +76,25 @@ def map_to_greyscale(letters: list, values: dict):
             if idx + 1 < len(keys):
                 idx += 1
     
-    for idx in range(256):
+    for idx in range(color_gradiant):
         scale_mapping[idx] = letterclasses[choose_class[idx]]
 
     return scale_mapping
 
-    
+
 def read_profile(file: str):
-    f = open(file)
-    stringy_profile = f.read()
-    profile = ast.literal_eval(stringy_profile)
+    with open(file) as f:
+        stringy_profile = f.read()
+        profile = ast.literal_eval(stringy_profile)
 
-    return profile
+        return profile
 
+# Takes a file containing all the letters to use for the art sepparated by '\n'.
+# The letters should be ordered by their greyscale value from darkest to lightest..
+# The letters are mapped into a dicitonary containing a list of letters indexed by the greyscale value.
 def read_letter_ranking(file: str):
-    f = open(file)
-    content = f.read()
+    with open(file) as f:
+        content = f.read()
     ranking = content.split('\n')
     formatted_ranking = []
     for letter in ranking:
@@ -128,10 +132,11 @@ def read_letter_ranking(file: str):
     return scale_mapping
 
 
+# for running funciton tests
 def tst():
-    print(f"default folder: {default_folder}")
+    print(f"default folder: {dev_test_folder}")
     letters = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z','0','1','2','3','4','5','6','7','8','9']
-    filename = os.path.join(default_folder, 'assets\\letters.ranked')
+    filename = os.path.join(dev_test_folder, 'assets\\letters.ranked')
     print("generating weights")
     gs = read_letter_ranking(filename)
     

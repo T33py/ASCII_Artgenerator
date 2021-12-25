@@ -2,7 +2,7 @@ from PIL import Image
 
 tst = "C:/Users/Thorb/source/repos/ASCIIArtGeneratorV3/assets/rgb_tst.jpg"
 
-# Create an array containing the greyscale value of the image pixels
+# Create a 2 dimensional array containing the greyscale value of the image pixels
 def convert_to_greyscale(img: str):
     gs_img = []
     im = Image.open(img)

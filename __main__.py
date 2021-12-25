@@ -58,7 +58,7 @@ def main():
     if not os.path.isdir(outdir):
         os.mkdir(outdir)
 
-    filename = os.path.join(outdir, f'out\\{f_out}')
+    filename = os.path.join(outdir, f'{f_out}')
     print(f'printing image to {filename}')
     print_to_file(filename, ascii_art)
     
