@@ -3,7 +3,7 @@ import sys
 import logging
 from utility.arg_reader import read_args
 from image_representation_printer import print_to_file
-from greyscale_image import convert_to_greyscale
+from greyscale_image import scaled_convert_to_greyscale, convert_to_greyscale
 from utility.font_profiler import read_letter_ranking
 from ascii_mapper import map_to_ascii
 
@@ -11,15 +11,22 @@ def main():
     # read args
     f_in = ''
     f_out = ''
+    width = None
+    height = None
     try:
-        (uf_in, uf_out) = read_args(sys.argv)
+        (uf_in, uf_out, (w, h)) = read_args(sys.argv)
+
+        print(f'args: {(uf_in, uf_out, (w, h))}')
         
         if uf_in != "":
             f_in = uf_in
 
         if uf_out != "":
             f_out = uf_out
-            
+        
+        width = w
+        height = h
+
     except ValueError as e:
         logging.error(f"Invalid argument assignment: {e}")
         return 1
@@ -43,7 +50,7 @@ def main():
         return 3
     
     print(f"converting {filename} to greyscale")
-    greyscaled_image = convert_to_greyscale(filename)
+    greyscaled_image = scaled_convert_to_greyscale(filename, width, height)
     
     # computation
     print("Converting to ascii")
