@@ -5,7 +5,7 @@ This program uses PIL to retrieve image information
 
 Images should be in JPG format (.jpg or .jpeg extension). Other formats will probably be added later.
 
-Example of use: `.\ASCIIArtGeneratorV3\ -i house.jpg -o house.txt`
+Example of use: Place the __house.jpg__ file in the assets folder and execute `.\ASCIIArtGeneratorV3\ -i house.jpg -o house.txt`
 
 Letters are mapped to the greyscale in accordance with the letters.ranked file found in the assets folder. They are ordered darkest to lightest. To add your own letters just insert them into that file at the appropriate line. The letters are sepperated by the newline symbol and only the first letter of each line is included to avoid including random whitespaces in the art. 
 
