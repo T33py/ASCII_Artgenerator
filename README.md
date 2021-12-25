@@ -15,7 +15,7 @@ Input images specified with the "-i \<name\>.\<extension\>" argument will be rea
 
 Output text files specified with the "-o \<name\>.\<extension\>" will be placed in the out folder.
 
-# Misc code information
+## Misc code information
 The font_profiler.py file contains functions from my iteration of creaing a system for ranking letters according to the percieved greyscale value when zoomed out. 
 - generate_weightings: This function is used to approximate the greyscale value of a letter based on a sample image. My samples are found in the assets folder.
 - map_to_greyscale: This function maps the letters profiled to a greyscale dictionary. I used a print of this for the initial version of the letters.ranked file which is used to generate the actual greyscale used in the images.
