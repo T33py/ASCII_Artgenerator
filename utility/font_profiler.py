@@ -82,14 +82,6 @@ def map_to_greyscale(letters: list, values: dict):
 
     return scale_mapping
 
-
-def read_profile(file: str):
-    with open(file) as f:
-        stringy_profile = f.read()
-        profile = ast.literal_eval(stringy_profile)
-
-        return profile
-
 # Takes a file containing all the letters to use for the art sepparated by '\n'.
 # The letters should be ordered by their greyscale value from darkest to lightest..
 # The letters are mapped into a dicitonary containing a list of letters indexed by the greyscale value.
@@ -117,6 +109,7 @@ def read_letter_ranking(file: str):
         # when we have the correct part of the gradient matched to this letter -> got to the next letter if we have one
         if count >= interval:
             # randomly fill with letters to fill out the remaining values left over after the naiive mapping based on interval
+            # in practice random will often perform simmilarly to any sofisticated algorithm for these kinds of choises
             if remainder > 0 and randint(0,1) > 0 and not remainder_used:
                 remainder -= 1
                 remainder_used = True
