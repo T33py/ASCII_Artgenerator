@@ -91,14 +91,14 @@ def read_letter_ranking(file: str):
     ranking = content.split('\n')
     formatted_ranking = []
     for letter in ranking:
+        letter.strip()
         if letter != "":
-            letter.strip()
             formatted_ranking.append(letter[0])
     formatted_ranking.append(' ')
 
     scale_mapping = {}
     interval = color_gradiant // len(formatted_ranking)
-    remainder = color_gradiant % interval
+    remainder = color_gradiant % interval # we will need to pad up to len(formatted_ranking) -1 letters to fill out the gradient - we keep track of it with this variable
     remainder_used = False
     choose_class = []
     letter_index = 0
@@ -106,7 +106,7 @@ def read_letter_ranking(file: str):
     for val in range(color_gradiant):
         choose_class.append(formatted_ranking[letter_index])
         count += 1
-        # when we have the correct part of the gradient matched to this letter -> got to the next letter if we have one
+        # when we have the correct part of the gradient matched to this letter -> got to the next letter if we have one (pad whitespace untill we are done)
         if count >= interval:
             # randomly fill with letters to fill out the remaining values left over after the naiive mapping based on interval
             # in practice random will often perform simmilarly to any sofisticated algorithm for these kinds of choises
