@@ -25,7 +25,7 @@ The font_profiler.py file contains functions from my iteration of creaing a syst
  - Machinelearning!
     - [ ] data
     - [ ] do generational selection over letter ranking
-    - [ ] improvement scored with highress textrender downscaled to match the original
-    - [ ] threadable iterative leaning method (probably swapping letters around the ranking)
+    - [x] improvement scored with highress textrender downscaled to match the original
+    - [x] threadable iterative leaning method (probably swapping letters around the ranking)
  - ??
  - Profit

@@ -86,34 +86,40 @@ def map_to_greyscale(letters: list, values: dict):
 # The letters should be ordered by their greyscale value from darkest to lightest..
 # The letters are mapped into a dicitonary containing a list of letters indexed by the greyscale value.
 def read_letter_ranking(file: str):
+    formatted_ranking = read_letters(file)
+    return create_greyscale_mapping(formatted_ranking)
+
+def read_letters(file: str):
     with open(file) as f:
         content = f.read()
-    ranking = content.split('\n')
-    formatted_ranking = []
-    for letter in ranking:
-        letter.strip()
-        if letter != "":
-            formatted_ranking.append(letter[0])
-    formatted_ranking.append(' ')
+        ranking = content.split('\n')
+        formatted_ranking = []
+        for letter in ranking:
+            letter.strip()
+            if letter != "":
+                formatted_ranking.append(letter[0])
+        formatted_ranking.append(' ')
+    return formatted_ranking
 
+def create_greyscale_mapping(letters: list):
     scale_mapping = {}
-    interval = color_gradiant // len(formatted_ranking)
+    interval = color_gradiant // len(letters)
     remainder = color_gradiant % interval # we will need to pad up to len(formatted_ranking) -1 letters to fill out the gradient - we keep track of it with this variable
     remainder_used = False
     choose_class = []
     letter_index = 0
     count = 0
     for val in range(color_gradiant):
-        choose_class.append(formatted_ranking[letter_index])
+        choose_class.append(letters[letter_index])
         count += 1
         # when we have the correct part of the gradient matched to this letter -> got to the next letter if we have one (pad whitespace untill we are done)
         if count >= interval:
-            # randomly fill with letters to fill out the remaining values left over after the naiive mapping based on interval
-            # in practice random will often perform simmilarly to any sofisticated algorithm for these kinds of choises
-            if remainder > 0 and randint(0,1) > 0 and not remainder_used:
+            # place letters denser in the darker tones, this will probably be less noticeable
+            # last remainder will allways be given as whitespace since 256/1 == 256 which is not in range(256)
+            if remainder > 0 and color_gradiant / remainder < len(choose_class) and not remainder_used:
                 remainder -= 1
                 remainder_used = True
-            elif letter_index + 1 < len(formatted_ranking):
+            elif letter_index + 1 < len(letters):
                 count = 0
                 letter_index += 1
                 remainder_used = False
@@ -122,6 +128,7 @@ def read_letter_ranking(file: str):
         scale_mapping[letter_index] = choose_class[letter_index]
 
     return scale_mapping
+    
 
 
 # for running funciton tests
