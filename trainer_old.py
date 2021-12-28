@@ -8,7 +8,6 @@ from greyscale_image import greyscale, scaled_convert_to_greyscale
 from image_representation_printer import print_image_representation, print_to_file, write_ranking
 from ascii_mapper import map_to_ascii
 from utility.font_profiler import create_greyscale_mapping, read_letters
-from trainee import LetterPicker
 
 
 dev_folder = "C:\\Users\\Thorb\\source\\repos\\ASCIIArtGeneratorV3"
@@ -24,10 +23,13 @@ if not os.path.isdir(training_folder):
 
 # runs the training function and reports results to the runner
 class Optimizer (threading.Thread):
-    def __init__(self, threadID:int, letter:str, dashboard:dict, finished:dict, report_back:dict):
+    def __init__(self, threadID:int, name:str, letters:list, gs_image:list, dist:int , dashboard:dict, finished:dict, report_back:dict):
         threading.Thread.__init__(self)
         self.threadID = threadID
-        self.name = letter
+        self.name = name
+        self.letters = letters
+        self.gs_image = gs_image
+        self.dist = dist
         self.dashboard = dashboard
         self.report_back = report_back
         self.finished = finished
@@ -35,8 +37,7 @@ class Optimizer (threading.Thread):
         print(f'starting thread: {str(self.threadID)}')
         self.dashboard[self.threadID] = True
         try:
-            raise "todo"
-            result = train()
+            result = train(self.letters, self.gs_image, self.name, self.dist)
             self.report_back[result[2]] = (result[1], self.name)
         finally:
             self.finished[self.threadID] = True
@@ -127,15 +128,40 @@ def runner(letters: list, gs_image: list, generation: int):
     return "DONE"
     
 # Search the given space for better permutations
-def train(trainee: LetterEvaluator, iterations: int):
-    for iter in range(iterations):
-        pixels = []
-        for x in range(9):
-            gsv = randint(0, 255)
-            pixels.append(gsv)
-        trainee.train(pixels)
+def train(letters: list, gs_image: list, name: str, dist: int):
+    current_folder = os.path.join(training_folder, name)
+    if not os.path.isdir(current_folder):
+        os.mkdir(current_folder)
 
-    return trainee
+    # print(f'{name} calculating baseline')
+    better_orderings = []
+    ascii_rendered = render_ascii(letters, gs_image, 'baseline', False, False)
+    baseline_diff = calculate_diff(ascii_rendered, gs_image)
+    best = letters
+    best_diff = baseline_diff
+    # print(f'{name} baseline = {baseline_diff}')
+    print_to_file(os.path.join(current_folder, f'baseline.txt'), create_ascii_art(letters, gs_image))
+    write_ranking(os.path.join(current_folder, 'baseline.ranked'), letters)
+
+
+    permutations = len(letters) - 2 # we need to account for the swap using 2 letters
+    for permutation in range(permutations):
+        # print(f'running permutations {str(permutation)}')
+        current_mutation = mutate(letters.copy(), permutation, dist)
+        ascii_rendered = render_ascii(current_mutation, gs_image)
+        mutation_diff = calculate_diff(ascii_rendered, gs_image)
+        if mutation_diff < baseline_diff:
+            better_orderings.append(current_mutation)
+            if mutation_diff < best_diff:
+                best_diff = mutation_diff
+                best = current_mutation
+                print(f'{name} found new best: {mutation_diff}')
+                print_to_file(os.path.join(current_folder, f'{name}_{permutation}.txt'), create_ascii_art(letters, gs_image))
+                write_ranking(os.path.join(current_folder, f'{name}_p_{permutation}.ranked'), current_mutation)
+        
+        
+    print(f'Number of improved letter orderings found: {str(len(better_orderings))}')
+    return (better_orderings, best, best_diff)
 
 # mutate the list of letters by swapping 2 letters at swap and swap+1
 def mutate(letters: list, swap: int, dist = 1):
